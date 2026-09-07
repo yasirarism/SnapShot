@@ -21,7 +21,7 @@ import { Progress } from "@/components/ui/progress";
 import { 
   Loader2, Monitor, Smartphone, Download, AlertCircle, Play, 
   Layers, Search, CheckSquare, Copy, Check, ExternalLink, Zap, Code2,
-  Film, Camera, Trash2, RotateCcw, Github
+  Film, Camera, Trash2, RotateCcw
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -29,7 +29,7 @@ const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, "");
 const API_BASE = `${window.location.origin}${BASE_PATH}/api`;
 
 const ALL_ENDPOINTS = [
-  { method: "GET",  path: "/capture",           params: "?siteUrl=&viewport=desktop&fullPage=false", desc: "Capture → returns JPG directly" },
+  { method: "GET",  path: "/capture",           params: "?siteUrl=&viewport=desktop&fullPage=false", desc: "Capture → returns PNG directly" },
   { method: "POST", path: "/screenshot",         params: "",   desc: "Capture → returns JSON metadata" },
   { method: "GET",  path: "/screenshots",        params: "",   desc: "List all captures" },
   { method: "GET",  path: "/screenshots/:id",    params: "",   desc: "Get single capture metadata" },
@@ -297,34 +297,10 @@ export default function Home() {
               <p className="text-[9px] font-mono text-muted-foreground tracking-widest uppercase leading-none mt-0.5">by WOLVAREX</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0 text-[10px] font-mono text-muted-foreground">
-            <span className="hidden sm:inline">
-              Creator: <span className="text-foreground/70">Silent Wolf</span>
-            </span>
-
+          <div className="flex items-center gap-3 shrink-0 text-[10px] font-mono text-muted-foreground">
+            <span className="hidden sm:inline">Creator: <span className="text-foreground/70">Silent Wolf</span></span>
             <span className="hidden md:inline text-border">|</span>
-
-            <Link
-              href="/docs"
-              className="flex items-center hover:text-primary transition-colors"
-            >
-              <span className="hidden sm:inline">API Docs →</span>
-              <span className="sm:hidden">Docs</span>
-            </Link>
-
-            <span className="hidden md:inline text-border">|</span>
-
-            <a
-              href="https://github.com/WOLVAREX/SnapShot"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-primary transition-colors"
-              aria-label="Open SnapShot source code on GitHub"
-              title="Open Source on GitHub"
-            >
-              <Github className="w-4 h-4" />
-              <span className="hidden sm:inline">Open Source</span>
-            </a>
+            <Link href="/docs" className="hidden md:inline hover:text-primary transition-colors">API Docs →</Link>
           </div>
         </div>
       </header>
@@ -762,7 +738,7 @@ export default function Home() {
                 <div className="flex items-center justify-between mb-2 gap-2">
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-primary/15 text-primary border border-primary/20">GET</span>
-                    <span className="text-[10px] font-mono text-muted-foreground">Returns JPG directly — embed in anything</span>
+                    <span className="text-[10px] font-mono text-muted-foreground">Returns PNG directly — embed in anything</span>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <CopyButton text={liveEndpointUrl} />
@@ -800,7 +776,7 @@ export default function Home() {
                 </div>
 
                 <p className="text-[10px] font-mono text-muted-foreground mt-2">
-                  Add <code className="text-primary/80 bg-primary/8 px-1 rounded">&amp;format=json</code> to get JSON metadata instead of JPG image.
+                  Add <code className="text-primary/80 bg-primary/8 px-1 rounded">&amp;format=json</code> to get JSON metadata instead of PNG image.
                 </p>
               </div>
 
@@ -820,7 +796,7 @@ export default function Home() {
                   <code className="text-[10px] font-mono text-foreground/70 break-all block leading-relaxed">
                     <span className="text-primary/60">curl </span>
                     <span className="text-foreground/80 break-all">"{isValidUrl(url) ? liveEndpointUrl.slice(0, 60) + "…" : "…/api/capture?siteUrl=https://…"}"</span>
-                    <span className="text-foreground/50"> -o capture.jpg</span>
+                    <span className="text-foreground/50"> -o capture.png</span>
                   </code>
                 </div>
               </div>

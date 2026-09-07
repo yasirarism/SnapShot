@@ -21,7 +21,7 @@ import { Progress } from "@/components/ui/progress";
 import { 
   Loader2, Monitor, Smartphone, Download, AlertCircle, Play, 
   Layers, Search, CheckSquare, Copy, Check, ExternalLink, Zap, Code2,
-  Film, Camera, Trash2, RotateCcw, Github
+  Film, Camera, Trash2, RotateCcw
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -297,34 +297,10 @@ export default function Home() {
               <p className="text-[9px] font-mono text-muted-foreground tracking-widest uppercase leading-none mt-0.5">by WOLVAREX</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0 text-[10px] font-mono text-muted-foreground">
-            <span className="hidden sm:inline">
-              Creator: <span className="text-foreground/70">Silent Wolf</span>
-            </span>
-
+          <div className="flex items-center gap-3 shrink-0 text-[10px] font-mono text-muted-foreground">
+            <span className="hidden sm:inline">Creator: <span className="text-foreground/70">Silent Wolf</span></span>
             <span className="hidden md:inline text-border">|</span>
-
-            <Link
-              href="/docs"
-              className="flex items-center hover:text-primary transition-colors"
-            >
-              <span className="hidden sm:inline">API Docs →</span>
-              <span className="sm:hidden">Docs</span>
-            </Link>
-
-            <span className="hidden md:inline text-border">|</span>
-
-            <a
-              href="https://github.com/WOLVAREX/SnapShot"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-primary transition-colors"
-              aria-label="Open SnapShot source code on GitHub"
-              title="Open Source on GitHub"
-            >
-              <Github className="w-4 h-4" />
-              <span className="hidden sm:inline">Open Source</span>
-            </a>
+            <Link href="/docs" className="hidden md:inline hover:text-primary transition-colors">API Docs →</Link>
           </div>
         </div>
       </header>

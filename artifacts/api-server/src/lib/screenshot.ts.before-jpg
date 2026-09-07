@@ -105,12 +105,12 @@ export async function captureScreenshot(
     const page = await context.newPage();
     await page.goto(url, { waitUntil: "networkidle", timeout: 30000 });
 
-    const filename = `${id}.jpg`;
+    const filename = `${id}.png`;
     const filepath = path.join(screenshotsDir, filename);
-    await page.screenshot({ path: filepath, type: "jpeg", quality: 90, fullPage });
+    await page.screenshot({ path: filepath, fullPage });
 
     meta.status = "completed";
-    meta.imageUrl = `/api/screenshots/${id}.jpg`;
+    meta.imageUrl = `/api/screenshots/${id}/image`;
     logger.info({ id, url }, "Screenshot captured");
   } catch (err) {
     meta.status = "failed";
@@ -253,9 +253,9 @@ async function processBulkJob(
       archive.on("error", reject);
       archive.pipe(output);
       for (const s of completedShots) {
-        const imgPath = path.join(screenshotsDir, `${s.id}.jpg`);
+        const imgPath = path.join(screenshotsDir, `${s.id}.png`);
         const label = new URL(s.url).pathname.replace(/\//g, "_").replace(/^_/, "") || "root";
-        const entryName = `${label}_${s.id.slice(0, 8)}.jpg`;
+        const entryName = `${label}_${s.id.slice(0, 8)}.png`;
         archive.file(imgPath, { name: entryName });
       }
       archive.finalize();
@@ -284,7 +284,7 @@ export function getBulkJob(sessionId: string, jobId: string): BulkJobMeta | unde
 }
 
 export function getScreenshotImagePath(id: string): string {
-  return path.join(screenshotsDir, `${id}.jpg`);
+  return path.join(screenshotsDir, `${id}.png`);
 }
 
 export function getBulkZipPath(jobId: string): string {
@@ -301,7 +301,7 @@ function scheduleCleanup(sessionId: string, id: string): void {
       if (store.size === 0) sessionScreenshotStore.delete(sessionId);
     }
     try {
-      await fs.unlink(path.join(screenshotsDir, `${id}.jpg`));
+      await fs.unlink(path.join(screenshotsDir, `${id}.png`));
     } catch {}
   }, CLEANUP_DELAY_MS);
 }

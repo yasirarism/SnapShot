@@ -135,7 +135,19 @@ router.get("/capture", async (req, res): Promise<void> => {
 
   try {
     const result = await captureScreenshot(req.sessionId, siteUrl, vp, fp);
-    res.json(withMeta(getBaseUrl(req), result));
+    if (format === "json") {
+      res.json(withMeta(getBaseUrl(req), result));
+      return;
+    }
+    const imgPath = getScreenshotImagePath(result.id);
+    if (!fs.existsSync(imgPath)) {
+      res.status(500).json({ error: "Screenshot captured but file not found" });
+      return;
+    }
+    res.setHeader("Content-Type", "image/jpeg");
+    res.setHeader("Content-Disposition", `inline; filename="capture.jpg"`);
+    res.setHeader("Cache-Control", "public, max-age=60");
+    fs.createReadStream(imgPath).pipe(res);
   } catch (err) {
     req.log.error({ err }, "Capture endpoint error");
     res.status(500).json({ error: err instanceof Error ? err.message : "Capture failed" });

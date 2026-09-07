@@ -27,7 +27,7 @@ function getBaseUrl(req: Request): string {
 const router: IRouter = Router();
 
 router.get("/record", async (req, res): Promise<void> => {
-  const { siteUrl, viewport } = req.query as Record<string, string | undefined>;
+  const { siteUrl, viewport, format } = req.query as Record<string, string | undefined>;
 
   if (!siteUrl) {
     res.status(400).json({ error: "Missing required query param: siteUrl" });
@@ -41,14 +41,28 @@ router.get("/record", async (req, res): Promise<void> => {
 
   try {
     const meta = await recordVideo(req.sessionId, siteUrl, vp);
-    const base = getBaseUrl(req);
-
-    res.json({
-      ...meta,
-      videoUrl: meta.videoUrl ? `${base}${meta.videoUrl}` : null,
-      provider: PROVIDER,
-      creator: CREATOR,
-    });
+    if (format === "json") {
+      const base = getBaseUrl(req);
+      res.json({
+        ...meta,
+        videoUrl: meta.videoUrl ? `${base}${meta.videoUrl}` : null,
+        provider: PROVIDER,
+        creator: CREATOR,
+      });
+      return;
+    }
+    const filePath = getVideoFilePath(meta.id);
+    if (!fs.existsSync(filePath)) {
+      res.status(500).json({ error: "Video recorded but file not found" });
+      return;
+    }
+    const stat = fs.statSync(filePath);
+    res.setHeader("Content-Type", "video/mp4");
+    res.setHeader("Content-Disposition", `inline; filename="record.mp4"`);
+    res.setHeader("Content-Length", stat.size);
+    res.setHeader("Accept-Ranges", "bytes");
+    res.setHeader("Cache-Control", "public, max-age=60");
+    fs.createReadStream(filePath).pipe(res);
   } catch (err) {
     req.log.error({ err }, "Record endpoint error");
     res.status(500).json({ error: err instanceof Error ? err.message : "Recording failed" });
@@ -93,6 +107,26 @@ router.get("/videos", (req, res): void => {
   res.json(videos);
 });
 
+router.get("/videos/:id", (req, res): void => {
+  const { id } = req.params;
+  if (!id || !/^[a-f0-9-]+$/i.test(id)) {
+    res.status(400).json({ error: "Invalid video ID" });
+    return;
+  }
+  const meta = getVideo(req.sessionId, id);
+  if (!meta) {
+    res.status(404).json({ error: "Video not found" });
+    return;
+  }
+  const base = getBaseUrl(req);
+  res.json({
+    ...meta,
+    videoUrl: meta.videoUrl ? `${base}${meta.videoUrl}` : null,
+    provider: PROVIDER,
+    creator: CREATOR,
+  });
+});
+
 router.get("/videos/:id.mp4", (req, res): void => {
   const { id } = req.params;
   if (!id || !/^[a-f0-9-]+$/i.test(id)) {
@@ -115,26 +149,6 @@ router.get("/videos/:id.mp4", (req, res): void => {
   res.setHeader("Content-Length", stat.size);
   res.setHeader("Accept-Ranges", "bytes");
   fs.createReadStream(filePath).pipe(res);
-});
-
-router.get("/videos/:id", (req, res): void => {
-  const { id } = req.params;
-  if (!id || !/^[a-f0-9-]+$/i.test(id)) {
-    res.status(400).json({ error: "Invalid video ID" });
-    return;
-  }
-  const meta = getVideo(req.sessionId, id);
-  if (!meta) {
-    res.status(404).json({ error: "Video not found" });
-    return;
-  }
-  const base = getBaseUrl(req);
-  res.json({
-    ...meta,
-    videoUrl: meta.videoUrl ? `${base}${meta.videoUrl}` : null,
-    provider: PROVIDER,
-    creator: CREATOR,
-  });
 });
 
 router.delete("/videos/:id", async (req, res): Promise<void> => {

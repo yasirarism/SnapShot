@@ -13,7 +13,7 @@
 - **Bulk capture** — select multiple pages and capture them all at once
 - **ZIP export** — download all screenshots from a bulk job as a ZIP archive
 - **Gallery** — view all captures in-app with PNG download
-- **Integration endpoint** — `GET /api/capture?siteUrl=...` returns a JPG directly, embeddable in `<img>` tags, Markdown, Slack, and any HTTP client
+- **Integration endpoint** — `GET /api/capture?siteUrl=...` returns a PNG directly, embeddable in `<img>` tags, Markdown, Slack, and any HTTP client
 - **JSON metadata** — every capture returns `imageUrl`, `provider`, and `creator` fields
 
 ---
@@ -116,11 +116,11 @@ Open `http://localhost:5173` in your browser.
 
 | Method | Path | Description |
 |---|---|---|
-| `GET` | `/api/capture` | **Capture → returns JPG directly** |
+| `GET` | `/api/capture` | **Capture → returns PNG directly** |
 | `POST` | `/api/screenshot` | Capture → returns JSON metadata |
 | `GET` | `/api/screenshots` | List all captures |
 | `GET` | `/api/screenshots/:id` | Get single capture metadata |
-| `GET` | `/api/screenshots/:id.jpg` | Stream JPG screenshot |
+| `GET` | `/api/screenshots/:id/image` | Stream screenshot image |
 | `POST` | `/api/pages/discover` | Discover navigation pages |
 | `POST` | `/api/screenshots/bulk` | Start bulk capture job |
 | `GET` | `/api/bulk/:jobId` | Poll bulk job status |

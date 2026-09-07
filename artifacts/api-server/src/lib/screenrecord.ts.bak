@@ -254,7 +254,7 @@ export async function recordVideo(
     }
 
     meta.status = "completed";
-    meta.videoUrl = `/api/videos/${id}.mp4`;
+    meta.videoUrl = `/api/videos/${id}/file`;
     meta.duration = Math.round(
       (Date.now() - startTime) / 1000
     );

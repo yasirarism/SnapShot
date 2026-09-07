@@ -14,7 +14,7 @@ All responses are JSON unless otherwise noted. Every response includes `provider
 2. [POST /screenshot](#2-post-screenshot) — Capture, returns JSON
 3. [GET /screenshots](#3-get-screenshots) — List all captures
 4. [GET /screenshots/:id](#4-get-screenshotsid) — Get single capture
-5. [GET /screenshots/:id.jpg](#5-get-screenshotsidimage) — Stream JPG image
+5. [GET /screenshots/:id/image](#5-get-screenshotsidimage) — Stream PNG image
 6. [POST /pages/discover](#6-post-pagesdiscover) — Discover navigation pages
 7. [POST /screenshots/bulk](#7-post-screenshotsbulk) — Start bulk capture
 8. [GET /bulk/:jobId](#8-get-bulkjobid) — Poll bulk job
@@ -24,7 +24,7 @@ All responses are JSON unless otherwise noted. Every response includes `provider
 
 ## 1. GET /capture
 
-The primary integration endpoint. Captures a screenshot and returns the **JPG image directly** — no intermediate JSON step. Embed in `<img>` tags, Markdown, Slack messages, or any HTTP client.
+The primary integration endpoint. Captures a screenshot and returns the **PNG image directly** — no intermediate JSON step. Embed in `<img>` tags, Markdown, Slack messages, or any HTTP client.
 
 ### Query Parameters
 
@@ -37,10 +37,10 @@ The primary integration endpoint. Captures a screenshot and returns the **JPG im
 
 ### Response
 
-**Default (JPG image):**
+**Default (PNG image):**
 ```
-Content-Type: image/jpeg
-Content-Disposition: inline; filename="capture.jpg"
+Content-Type: image/png
+Content-Disposition: inline; filename="capture.png"
 Cache-Control: public, max-age=60
 ```
 
@@ -52,7 +52,7 @@ Cache-Control: public, max-age=60
   "viewport": "desktop",
   "fullPage": false,
   "status": "completed",
-  "imageUrl": "https://your-domain/api/screenshots/uuid.jpg",
+  "imageUrl": "https://your-domain/api/screenshots/uuid/image",
   "createdAt": "2026-06-23T00:00:00.000Z",
   "provider": "WOLVAREX",
   "creator": "Silent Wolf"
@@ -71,10 +71,10 @@ Cache-Control: public, max-age=60
 ![Screenshot](https://your-domain/api/capture?siteUrl=https://example.com&viewport=mobile)
 ```
 
-**cURL — download JPG:**
+**cURL — download PNG:**
 ```bash
 curl "https://your-domain/api/capture?siteUrl=https://example.com&viewport=desktop" \
-  -o screenshot.jpg
+  -o screenshot.png
 ```
 
 **JavaScript fetch:**
@@ -115,7 +115,7 @@ Capture a single screenshot. Returns JSON metadata including the absolute `image
   "viewport": "desktop",
   "fullPage": false,
   "status": "completed",
-  "imageUrl": "https://your-domain/api/screenshots/3d63b31d-6156-4fd8-a586-1c312ed26f29.jpg",
+  "imageUrl": "https://your-domain/api/screenshots/3d63b31d-6156-4fd8-a586-1c312ed26f29/image",
   "createdAt": "2026-06-23T00:00:00.000Z",
   "provider": "WOLVAREX",
   "creator": "Silent Wolf"
@@ -146,7 +146,7 @@ List all captures stored in the current session (most recent first). Captures ar
     "viewport": "desktop",
     "fullPage": false,
     "status": "completed",
-    "imageUrl": "https://your-domain/api/screenshots/uuid.jpg",
+    "imageUrl": "https://your-domain/api/screenshots/uuid/image",
     "createdAt": "2026-06-23T00:00:00.000Z",
     "provider": "WOLVAREX",
     "creator": "Silent Wolf"
@@ -184,14 +184,14 @@ Same shape as a single item from [GET /screenshots](#3-get-screenshots).
 
 ---
 
-## 5. GET /screenshots/:id.jpg
+## 5. GET /screenshots/:id/image
 
-Stream the raw JPG file for a completed capture.
+Stream the raw PNG file for a completed capture.
 
 ### Response
 
 ```
-Content-Type: image/jpeg
+Content-Type: image/png
 Content-Disposition: inline; filename="{id}.png"
 ```
 
@@ -309,7 +309,7 @@ Poll the status of a bulk capture job. Call this endpoint every 2 seconds until 
       "id": "uuid",
       "url": "https://example.com/",
       "status": "completed",
-      "imageUrl": "https://your-domain/api/screenshots/uuid.jpg",
+      "imageUrl": "https://your-domain/api/screenshots/uuid/image",
       "provider": "WOLVAREX",
       "creator": "Silent Wolf"
     }
