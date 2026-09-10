@@ -1,0 +1,20 @@
+services:
+  snapshot:
+    build: .
+    image: snapshot:latest
+    container_name: snapshot
+    restart: unless-stopped
+    ports:
+      # Frontend UI + API proxy (gunakan ini di Traefik/CF Tunnel)
+      - "5000:5000"
+      # API langsung (opsional — hanya perlu jika mau akses API tanpa proxy)
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - snapshot-screenshots:/app/artifacts/api-server/screenshots
+      - snapshot-videos:/app/artifacts/api-server/videos
+
+volumes:
+  snapshot-screenshots:
+  snapshot-videos:

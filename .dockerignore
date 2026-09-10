@@ -1,0 +1,15 @@
+.git
+.gitignore
+**/node_modules
+**/dist
+**/screenshots
+**/videos
+**/*.bak
+**/*.before-*
+**/*.before-jpg
+*.md
+Dockerfile
+.dockerignore
+docker-compose.yml
+CONTRIBUTING.md
+LICENSE
